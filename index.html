@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registro FXL</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* ------------------ MOBILE-FIRST ------------------ */
+/* 1) Contenedor: columna por defecto */
+.content-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 16px; /* espacio entre secciones */
+}
+
+/* 2) Columnas full-width en móvil */
+.fixed-data-column,
+.input-form-column {
+  width: 100%;
+}
+
+/* 3) Inputs más cómodos para el pulgar */
+input, select, textarea {
+  font-size: 1rem;
+  padding: 12px;
+  box-sizing: border-box;
+}
+
+/* 4) Botón full-width en móvil */
+.button-save {
+  width: 100%;
+  padding: 14px 0;
+  font-size: 1.05rem;
+  display: block;
+  margin: 0 auto 20px;
+}
+
+/* 5) Ahora, para pantallas grandes (>600px) volvemos al diseño de siempre */
+@media (min-width: 601px) {
+  .content-wrapper {
+    flex-direction: row;
+    gap: 25px;   /* tu gap de escritorio */
+  }
+  .fixed-data-column,
+  .input-form-column {
+    width: 50%;  /* o el flex:1 que ya tenías */
+  }
+  .button-save {
+    width: auto; /* volver al ancho de escritorio */
+    margin: 0;
+  }
+}
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background-color: #374151; /* Un gris un poco más claro que antes (Tailwind Gray 700) */
+      color: #D1D5DB; /* Texto un poco más claro para contraste (Tailwind Gray 300) */
+      margin: 0;
+      padding: 15px; /* Reducido padding general para más espacio */
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh; 
+      box-sizing: border-box;
+    }
+    .main-container { /* Solo un contenedor principal ahora */
+      background-color: #1F2937; /* Gris más oscuro para el contenedor principal (Tailwind Gray 800) */
+      color: #9CA3AF; /* Texto gris claro (Tailwind Gray 400) */
+      padding: 20px 25px; /* Padding interno reducido */
+      border-radius: 8px; 
+      box-shadow: 0 6px 20px rgba(0,0,0,0.2); 
+      width: 100%;
+      max-width: 1200px; /* Un poco más de ancho si es posible */
+      margin-bottom: 20px; /* Margen inferior reducido */
+      border: 1px solid #374151; 
+    }
+    /* Quitado saved-records-container, se integra en main-container */
+
+    .form-title {
+      text-align: center;
+      color: #E5E7EB; /* Título principal claro (Tailwind Gray 200) */
+      margin-bottom: 20px; /* Reducido */
+      font-size: 1.8em; 
+      font-weight: 600; 
+    }
+    .content-wrapper {
+      display: flex;
+      gap: 25px; /* Reducido gap */
+    }
+    .fixed-data-column, .input-form-column {
+      flex: 1;
+      display: flex; 
+      flex-direction: column; 
+    }
+    .section-title {
+      font-size: 1.25em; /* Reducido */
+      color: #D1D5DB; 
+      margin-top: 0;
+      margin-bottom: 12px; /* Reducido */
+      padding-bottom: 8px; /* Reducido */
+      border-bottom: 2px solid #D88A3D; 
+      font-weight: 500; /* Un poco menos bold */
+    }
+    .info-list {
+        flex-grow: 1; 
+    }
+    .info-list .info-item {
+      margin-bottom: 5px; /* Reducido */
+      display: flex;
+      justify-content: space-between;
+      align-items: center; 
+      font-size: 0.9em; /* Reducido */
+      padding: 4px 0; /* Reducido */
+      border-bottom: 1px solid #374151; 
+    }
+    .info-list .info-item:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+    }
+    .info-item .label {
+      font-weight: 500; 
+      color: #9CA3AF; 
+      margin-right: 8px; 
+    }
+    .info-item .value {
+      font-weight: 400; /* Menos bold */
+      color: #D1D5DB; 
+      text-align: right;
+      word-break: break-word;
+    }
+    .company-logo-container {
+        margin-top: auto; 
+        padding-top: 15px; 
+        text-align: center; 
+    }
+    .company-logo-container img {
+        max-width: 150px; /* Logo más pequeño */
+        height: auto;
+        opacity: 0.7; 
+    }
+
+    .form-group {
+      margin-bottom: 10px; /* Reducido */
+      display: flex; 
+      flex-direction: column; 
+    }
+    .form-group > label {
+      font-weight: 500;
+      color: #9CA3AF;
+      display: block;
+      margin-bottom: 4px; /* Reducido */
+      font-size: 0.85em; /* Reducido */
+    }
+    input[type="text"], 
+    input[type="number"],
+    input[type="date"], 
+    input[type="time"], 
+    select, textarea {
+      display: block;
+      width: 100%;
+      padding: 9px 12px; /* Reducido padding de inputs */
+      border: 1px solid #374151; 
+      border-radius: 5px;
+      box-sizing: border-box;
+      font-size: 0.95em; /* Reducido */
+      font-family: 'Montserrat', sans-serif;
+      background-color: #111827; /* Fondo de input más oscuro (Tailwind Gray 900) */
+      color: #D1D5DB; 
+    }
+    input[type="date"], 
+    input[type="time"] {
+        min-height: 44px; /* Reducido min-height */
+        line-height: normal; 
+    }
+
+    input[type="date"]::-webkit-calendar-picker-indicator,
+    input[type="time"]::-webkit-calendar-picker-indicator {
+        filter: invert(0.7) contrast(0.9) brightness(1.2); /* Ajustado para mejor visibilidad */
+        transform: scale(1.2); 
+        cursor: pointer;
+    }
+    
+    input:focus, select:focus, textarea:focus {
+      border-color: #D88A3D;
+      outline: none;
+      box-shadow: 0 0 0 2px rgba(216, 138, 61, 0.3); /* Sombra más sutil */
+      background-color: #1F2937; 
+    }
+    .form-row {
+      display: flex;
+      gap: 12px; /* Reducido gap */
+      align-items: flex-start; 
+    }
+    .form-row .form-group {
+      flex: 1; 
+    }
+    .personas-operario-row .form-group:first-child { 
+        flex-basis: 30%; /* Reducido un poco para cant personas */
+        flex-grow: 1;
+    }
+    .personas-operario-row .form-group:last-child { 
+        flex-basis: 70%; 
+        flex-grow: 2;
+    }
+
+    textarea {
+      min-height: 60px; /* Reducido */
+      resize: vertical;
+    }
+    .button-container {
+      text-align: right;
+      margin-top: 18px; /* Reducido */
+    }
+    .button-save {
+      background-color: #D88A3D; 
+      color: #111827; 
+      padding: 10px 25px; /* Reducido */
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 1em; /* Reducido */
+      font-weight: 600; 
+    }
+    
+    .success-message, .error-message {
+      margin-top: 10px; /* Reducido */
+      font-size: 0.9em; /* Reducido */
+    }
+    
+    /* Registros guardados */
+    .saved-records-section { /* Nueva clase para la sección de registros */
+        margin-top: 25px; /* Espacio arriba de la sección */
+        max-height: 250px; /* Altura máxima ANTES de que aparezca scroll */
+        overflow-y: auto;  /* Scroll vertical SI es necesario */
+        border-top: 1px solid #374151; /* Separador */
+        padding-top: 15px; /* Espacio interno */
+    }
+    .saved-records-table {
+      width: 100%;
+      border-collapse: collapse;
+      /* margin-top quitado, controlado por .saved-records-section */
+    }
+    .saved-records-table th, .saved-records-table td {
+      border: 1px solid #374151;
+      padding: 8px 10px; /* Reducido */
+      font-size: 0.85em; /* Reducido */
+    }
+    .saved-records-table th {
+      background-color: #111827; 
+      font-weight: 500; /* Menos bold */
+      color: #9CA3AF; 
+      position: sticky; /* Para que los encabezados se queden fijos al hacer scroll */
+      top: 0;           /* Necesario para sticky */
+      z-index: 1;       /* Para que esté sobre el contenido de la tabla */
+    }
+    .saved-records-table tbody tr:nth-child(odd) {
+      background-color: #1F2937; 
+    }
+     .saved-records-table tbody tr:nth-child(even) {
+      background-color: #1c2635; /* Un poco diferente para even */
+    }
+    .no-records {
+      text-align: center;
+      color: #9CA3AF; 
+      padding: 20px; /* Reducido */
+      font-size: 0.9em; /* Reducido */
+      background-color: #111827; 
+      border-radius: 5px;
+    }
+    #operariosContainer .form-group {
+      margin-bottom: 10px; /* Reducido */
+    }
+    #operariosContainer .form-group label {
+      font-size: 0.82em; /* Reducido */
+    }
+/* -------------  Ajustes “mock-up” para móviles ------------- */
+@media (max-width: 600px){
+
+  /* espacio exterior */
+  body                { padding:10px; }
+
+  /* Tarjeta principal */
+  .main-container     { 
+      padding:18px 14px; 
+      max-width:none !important;   /* ① SIN límite de ancho */
+  }
+
+  /* Título */
+  .form-title         { font-size:1.45rem; margin-bottom:14px; }
+
+  /* ② Columna fija + formulario → APILADOS */
+  .content-wrapper    { 
+      flex-direction:column !important;  /* ← ¡ahora sí se impone! */
+      gap:18px; 
+  }
+
+  /* ③ Cada columna ancho completo */
+  .fixed-data-column,
+  .input-form-column  { width:100% !important; }
+
+  /* Listado de datos fijos */
+  .info-list .info-item{ font-size:0.96rem; padding:6px 0; }
+
+  /* Sub-títulos */
+  .section-title      { font-size:1.05rem; margin-bottom:10px; }
+
+  /* Campos */
+  label               { font-size:0.88rem; }
+  input,
+  select,
+  textarea            { 
+      font-size:1rem !important;      /* ④ letra más grande */
+      padding:12px 14px !important;   /* ④ “hit-area” más cómodo */
+  }
+
+  /* ⑤ Filas dobles → verticales */
+  .form-row           { 
+      flex-direction:column !important; 
+      gap:14px; 
+  }
+
+  /* Botón ocupa 100 % */
+  .button-container   { text-align:center; margin-top:20px; }
+  .button-save        { 
+      width:100% !important; 
+      padding:14px 0; 
+      font-size:1.05rem; 
+  }
+
+  /* Tabla de registros: menos alta antes del scroll */
+  .saved-records-section{ max-height:180px; }
+   html { font-size: 125% !important; }   /* ⇧ escala todo */
+}
+  </style>
+</head>
+<body>
+  <div class="main-container"> <!-- Solo un contenedor principal -->
+    <h1 class="form-title">Registro de Producción FXL</h1>
+
+    <div class="content-wrapper">
+      <div class="fixed-data-column">
+        <h2 class="section-title">Detalles del Pedido</h2>
+        <div class="info-list">
+          <div class="info-item"><span class="label">Color / Ficha:</span><span class="value" id="val-colorFicha">Cargando...</span></div>
+          <div class="info-item"><span class="label">Diseño:</span><span class="value" id="val-diseno">Cargando...</span></div>
+          <div class="info-item"><span class="label">Nº Pedido:</span><span class="value" id="val-numeroPedido">Cargando...</span></div>
+          <div class="info-item"><span class="label">Cliente:</span><span class="value" id="val-cliente">Cargando...</span></div>
+          <div class="info-item"><span class="label">Artículo:</span><span class="value" id="val-articulo">Cargando...</span></div>
+          <div class="info-item"><span class="label">Vendedor:</span><span class="value" id="val-vendedor">Cargando...</span></div>
+          <div class="info-item"><span class="label">Partida:</span><span class="value" id="val-partida">Cargando...</span></div>
+          <div class="info-item"><span class="label">Puntadas PC:</span><span class="value" id="val-puntadasPC">Cargando...</span></div>
+          <div class="info-item"><span class="label">Con Movimiento:</span><span class="value" id="val-conMovimiento">Cargando...</span></div>
+          <div class="info-item"><span class="label">Mesa:</span><span class="value" id="val-mesa">Cargando...</span></div>
+          <div class="info-item"><span class="label">Gr/m² (sin base):</span><span class="value" id="val-grm2">Cargando...</span></div>
+          <div class="info-item"><span class="label">Archivo máquina:</span><span class="value" id="val-archivoMaquina">Cargando...</span></div>
+          <div class="info-item"><span class="label">Ancho:</span><span class="value" id="val-ancho">Cargando...</span></div>
+        </div>
+        <!-- Logo quitado -->
+      </div>
+
+      <div class="input-form-column">
+        <h2 class="section-title">Registro de Actividad</h2>
+        <form id="produccionForm">
+          <div class="form-group">
+            <label for="fecha">Fecha:</label>
+            <input type="date" id="fecha" name="fecha" required>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="horarioEntrada">Horario Entrada:</label>
+              <input type="time" id="horarioEntrada" name="horarioEntrada" required step="60"> <!-- step="60" para minutos -->
+            </div>
+            <div class="form-group">
+              <label for="horarioSalida">Horario Salida:</label>
+              <input type="time" id="horarioSalida" name="horarioSalida" required step="60"> <!-- step="60" para minutos -->
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group"> 
+              <label for="rolloNro">Nº de rollo:</label>
+              <input type="text" id="rolloNro" name="nroRollo" required>
+            </div>
+            <div class="form-group"> 
+              <label for="pasadasReales">Pasadas / 10cm:</label> <!-- Etiqueta cambiada -->
+              <input type="text" id="pasadasReales" name="pasadasReales" maxlength="4"> <!-- maxlength a 4 -->
+            </div>
+          </div>
+
+          <div class="form-row personas-operario-row">
+            <div class="form-group"> 
+              <label for="cantPersonas">Cant. personas:</label>
+              <select id="cantPersonas" name="cantPersonas"></select>
+            </div>
+            <div class="form-group"> 
+              <div id="operariosContainer"></div>
+            </div>
+          </div>
+          
+          <div class="form-row">
+            <div class="form-group">
+              <label for="mtsIniciales">Mts iniciales:</label>
+              <input type="number" id="mtsIniciales" name="mtsIniciales" step="any" required>
+            </div>
+            <div class="form-group">
+              <label for="mtsFinales">Mts finales:</label>
+              <input type="number" id="mtsFinales" name="mtsFinales" step="any" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="observaciones">Observaciones:</label>
+            <textarea id="observaciones" name="observaciones"></textarea>
+          </div>
+
+          <div class="button-container">
+            <button type="submit" class="button-save" id="btnGuardar">Guardar Registro</button>
+          </div>
+          <div id="successMessage" class="success-message"></div>
+          <div id="errorMessage" class="error-message"></div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Sección de Registros Guardados ahora dentro de main-container o como una sección separada si se quiere scroll independiente total -->
+    <div class="saved-records-section"> 
+        <h2 class="section-title">Registros Guardados del Día</h2>
+        <div id="savedRecordsTableContainer">
+          <p class="no-records" id="noRecordsMessage">Cargando registros...</p>
+          <table class="saved-records-table" id="savedRecordsTable" style="display:none;">
+            <thead>
+              <tr>
+                <th>Fecha</th>
+                <th>Rollo Nº</th>
+                <th>H. Ent.</th>
+                <th>H. Sal.</th>
+                <th>Operador(es)</th>
+                <th>Mts. Tej.</th>
+                <th>Pasadas</th>
+                <th>Obs.</th>
+              </tr>
+            </thead>
+            <tbody id="registrosTableBody"></tbody>
+          </table>
+        </div>
+    </div>
+
+  </div> <!-- Fin de main-container -->
+
+
+  <script>
+    // --- El JavaScript es el mismo de la respuesta anterior ---
+    let fixedOrderData = {}; 
+    let operariosDisponibles = []; 
+
+    document.addEventListener('DOMContentLoaded', function() {
+      const cantPersonasSelect = document.getElementById('cantPersonas');
+      const operariosContainer = document.getElementById('operariosContainer');
+      const produccionForm = document.getElementById('produccionForm');
+      const btnGuardar = document.getElementById('btnGuardar');
+      
+      const successMessageEl = document.getElementById('successMessage');
+      const errorMessageEl = document.getElementById('errorMessage');
+
+      function showTemporaryMessage(element, message, autoHide = true, isError = false) {
+        element.textContent = message;
+        element.style.display = 'block';
+        if (isError) { 
+            successMessageEl.style.display = 'none';
+        } else { 
+            errorMessageEl.style.display = 'none';
+        }
+        if (autoHide) {
+            setTimeout(() => {
+                element.style.display = 'none';
+            }, 4000);
+        }
+      }
+      
+      function handleGenericError(error, context) {
+        console.error(`Error en ${context}:`, error);
+        showTemporaryMessage(errorMessageEl, `Error en ${context}: ` + (error.message || error), true, true);
+      }
+      
+      function updateFixedDataUI(data) {
+        if (data.error) {
+          handleGenericError({message: data.error}, 'Datos del Pedido');
+          document.getElementById('val-colorFicha').textContent = 'Error';
+          document.getElementById('val-diseno').textContent = 'Error';
+          document.getElementById('val-numeroPedido').textContent = 'Error';
+          document.getElementById('val-cliente').textContent = 'Error';
+          document.getElementById('val-articulo').textContent = 'Error';
+          document.getElementById('val-vendedor').textContent = 'Error';
+          document.getElementById('val-partida').textContent = 'Error';
+          document.getElementById('val-puntadasPC').textContent = 'Error';
+          document.getElementById('val-conMovimiento').textContent = 'Error';
+          document.getElementById('val-mesa').textContent = 'Error';
+          document.getElementById('val-grm2').textContent = 'Error';
+          document.getElementById('val-archivoMaquina').textContent = 'Error';
+          document.getElementById('val-ancho').textContent = 'Error';
+          fixedOrderData = {}; 
+          return;
+        }
+        fixedOrderData = data; 
+        document.getElementById('val-colorFicha').textContent = data.colorFicha || 'N/A';
+        document.getElementById('val-diseno').textContent = data.diseno || 'N/A';
+        document.getElementById('val-numeroPedido').textContent = data.numeroPedido || 'N/A';
+        document.getElementById('val-cliente').textContent = data.cliente || 'N/A';
+        document.getElementById('val-articulo').textContent = data.articulo || 'N/A';
+        document.getElementById('val-vendedor').textContent = data.vendedor || 'N/A';
+        document.getElementById('val-partida').textContent = data.partida || 'N/A';
+        document.getElementById('val-puntadasPC').textContent = data.puntadasPC ? (data.puntadasPC + ' / 10cm') : 'N/A';
+        document.getElementById('val-conMovimiento').textContent = data.conMovimiento || 'N/A';
+        document.getElementById('val-mesa').textContent = data.mesa ? (data.mesa + ' mm') : 'N/A';
+        document.getElementById('val-grm2').textContent = data.grm2 ? (data.grm2 + ' gr/m²') : 'N/A';
+        document.getElementById('val-archivoMaquina').textContent = data.archivoMaquina || 'N/A';
+        document.getElementById('val-ancho').textContent = data.ancho ? (String(data.ancho).replace('.',',') + ' m') : 'N/A';
+      }
+
+      function populateDropdownsUI(data) {
+        if (data.error) {
+          handleGenericError({message: data.error}, 'Opciones Desplegables');
+          operariosDisponibles = ['(Error Operarios)'];
+        } else {
+          operariosDisponibles = data.operarios && data.operarios.length > 0 ? data.operarios : ['(Sin Operarios)'];
+        }
+        
+        const personasDefault = ['1','2','3','4'];
+        const personasOptions = (data.personas && data.personas.length > 0) ? data.personas : personasDefault;
+
+        cantPersonasSelect.innerHTML = ''; 
+        personasOptions.forEach(p => {
+            const option = document.createElement('option');
+            option.value = String(p); 
+            option.textContent = String(p);
+            cantPersonasSelect.appendChild(option);
+        });
+        if (cantPersonasSelect.options.length > 0) {
+            cantPersonasSelect.value = cantPersonasSelect.options[0].value;
+        }
+        generarCamposOperario(); 
+      }
+      
+      cantPersonasSelect.addEventListener('change', generarCamposOperario);
+      
+      function generarCamposOperario() {
+        operariosContainer.innerHTML = '';
+        const cantidad = parseInt(cantPersonasSelect.value) || 1;
+        for (let i = 1; i <= cantidad; i++) {
+          const fg = document.createElement('div');
+          fg.classList.add('form-group');
+          const lbl = document.createElement('label');
+          lbl.setAttribute('for', `operario${i}`);
+          lbl.textContent = cantidad === 1 ? 'Operario:' : `Operario ${i}:`;
+          const sel = document.createElement('select');
+          sel.id = `operario${i}`;
+          sel.name = `operario${i}`; 
+          sel.required = true;
+          operariosDisponibles.forEach(o => {
+            const opt = document.createElement('option');
+            opt.value = o;
+            opt.textContent = o;
+            sel.appendChild(opt);
+          });
+          fg.appendChild(lbl);
+          fg.appendChild(sel);
+          operariosContainer.appendChild(fg);
+        }
+      }
+
+      produccionForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        btnGuardar.disabled = true;
+        showTemporaryMessage(successMessageEl, 'Guardando...', false, false);
+        errorMessageEl.style.display = 'none';
+
+        const fd = new FormData(produccionForm);
+        const dataToSave = {
+            colorFicha_fijo: fixedOrderData.colorFicha,
+            diseno_fijo: fixedOrderData.diseno,
+            numeroPedido_fijo: fixedOrderData.numeroPedido,
+            cliente_fijo: fixedOrderData.cliente,
+            articulo_fijo: fixedOrderData.articulo,
+            vendedor_fijo: fixedOrderData.vendedor,
+            partida_fijo: fixedOrderData.partida,
+            puntadasPC_fijo: fixedOrderData.puntadasPC,
+            conMovimiento_fijo: fixedOrderData.conMovimiento,
+            mesa_fijo: fixedOrderData.mesa,
+            grm2_fijo: fixedOrderData.grm2,
+            archivoMaquina_fijo: fixedOrderData.archivoMaquina,
+            ancho_fijo: fixedOrderData.ancho,
+            fecha: fd.get('fecha'),
+            horarioEntrada: fd.get('horarioEntrada'),
+            horarioSalida: fd.get('horarioSalida'),
+            nroRollo: fd.get('nroRollo'),
+            mtsIniciales: fd.get('mtsIniciales'),
+            mtsFinales: fd.get('mtsFinales'),
+            pasadasReales: fd.get('pasadasReales'),
+            observaciones: fd.get('observaciones'),
+            cantPersonas: fd.get('cantPersonas')
+        };
+
+        let ops = [];
+        for (let i = 1; i <= parseInt(dataToSave.cantPersonas); i++) {
+          ops.push(fd.get(`operario${i}`));
+        }
+        dataToSave.operariosLista = ops.join(', ');
+
+        const mi = parseFloat(dataToSave.mtsIniciales);
+        const mf = parseFloat(dataToSave.mtsFinales);
+
+        if (isNaN(mi) || isNaN(mf) || mf < mi) {
+          showTemporaryMessage(errorMessageEl, "Error: Revisa los metros iniciales/finales.", true, true);
+          btnGuardar.disabled = false;
+          successMessageEl.style.display = 'none';
+          return;
+        }
+        
+        google.script.run
+            .withSuccessHandler(handleSaveSuccess)
+            .withFailureHandler(err => handleSaveFailure(err, dataToSave))
+            .saveEntry(dataToSave);
+      });
+
+      function handleSaveSuccess(response) {
+          btnGuardar.disabled = false;
+          if (response && response.status === 'OK') {
+              showTemporaryMessage(successMessageEl, response.message || 'Guardado correctamente.', true, false);
+              produccionForm.reset();
+              document.getElementById('fecha').valueAsDate = new Date(); 
+              if(cantPersonasSelect.options.length > 0) cantPersonasSelect.value = cantPersonasSelect.options[0].value;
+              generarCamposOperario(); 
+              loadSavedRecords(); 
+              document.getElementById('fecha').focus();
+          } else {
+              showTemporaryMessage(errorMessageEl, (response && response.message) || 'Error desconocido al guardar.', true, true);
+          }
+      }
+
+      function handleSaveFailure(error, dataSent) {
+          btnGuardar.disabled = false;
+          console.error('Error al guardar:', error, 'Datos enviados:', dataSent);
+          showTemporaryMessage(errorMessageEl, 'Error al guardar: ' + (error.message || error) , true, true);
+      }
+      
+      function loadSavedRecords() {
+        const noRecordsMessage = document.getElementById('noRecordsMessage');
+        const savedRecordsTable = document.getElementById('savedRecordsTable');
+        const registrosTableBody = document.getElementById('registrosTableBody');
+        
+        showTemporaryMessage(noRecordsMessage, 'Cargando registros...', false, false); 
+        noRecordsMessage.style.display = 'block'; 
+        savedRecordsTable.style.display = 'none';
+        registrosTableBody.innerHTML = ''; 
+
+        google.script.run
+            .withSuccessHandler(displaySavedRecords)
+            .withFailureHandler(error => handleGenericError(error, 'Carga de Registros'))
+            .getFXLRecords();
+      }
+
+      function displaySavedRecords(data) {
+        const registrosTableBody = document.getElementById('registrosTableBody');
+        const savedRecordsTable = document.getElementById('savedRecordsTable');
+        const noRecordsMessage = document.getElementById('noRecordsMessage');
+        registrosTableBody.innerHTML = '';
+
+        if (data.error) {
+            handleGenericError({message: data.error}, 'Visualización de Registros');
+            noRecordsMessage.textContent = 'Error al obtener registros: ' + data.error;
+            noRecordsMessage.style.display = 'block';
+            savedRecordsTable.style.display = 'none';
+            return;
+        }
+
+        if (data.rows && data.rows.length > 0) {
+            data.rows.forEach(record => { 
+                const row = registrosTableBody.insertRow(); 
+                row.insertCell().textContent = record.fecha; 
+                row.insertCell().textContent = record.rolloNro;
+                row.insertCell().textContent = record.horarioEntrada;
+                row.insertCell().textContent = record.horarioSalida;
+                row.insertCell().textContent = record.operariosLista;
+                row.insertCell().textContent = record.mtsTejidos;
+                row.insertCell().textContent = record.pasadasReales;
+                const obs = record.observaciones || '';
+                row.insertCell().textContent = obs.length > 25 ? obs.substring(0, 25) + "…" : obs;
+            });
+            savedRecordsTable.style.display = 'table';
+            noRecordsMessage.style.display = 'none';
+        } else {
+            noRecordsMessage.textContent = 'Aún no hay registros guardados hoy.';
+            noRecordsMessage.style.display = 'block';
+            savedRecordsTable.style.display = 'none';
+        }
+      }
+      
+      google.script.run.withSuccessHandler(updateFixedDataUI).withFailureHandler(err => handleGenericError(err, 'Datos del Pedido')).getFXLOptionsData();
+      google.script.run.withSuccessHandler(populateDropdownsUI).withFailureHandler(err => handleGenericError(err, 'Opciones Desplegables')).getDropdownOptions();
+      loadSavedRecords();
+      document.getElementById('fecha').valueAsDate = new Date(); 
+
+    });
+  </script>
+</body>
+</html>
